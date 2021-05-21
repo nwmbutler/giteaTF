@@ -23,10 +23,6 @@ resource "aws_ecr_repository" "gitea" {
   name = "gitea"
 }
 
-resource "aws_ecr_repository" "postgres" {
-  name = "postgres"
-}
-
 resource "aws_ecs_cluster" "cluster" {
   name = "ecs-cluster"
 }
@@ -60,7 +56,7 @@ resource "aws_ecs_task_definition" "first_task" {
 }
 
 resource "aws_iam_role" "ecsTaskExecutionRole" {
-  # name               = "ecsTaskExecutionRole"
+  name               = "ecsTaskExecutionRoleGitea"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 
 }
@@ -132,7 +128,10 @@ resource "aws_lb_listener" "listener" {
 }
 
 resource "aws_ecs_service" "ecs_service" {
-  name            = "ecs-service"
+  name = "ecs-service"
+  depends_on = [
+    aws_lb_listener.listener
+  ]
   cluster         = aws_ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.first_task.arn
   launch_type     = "FARGATE"
@@ -150,6 +149,8 @@ resource "aws_ecs_service" "ecs_service" {
     security_groups  = [aws_security_group.service_security_group.id]
   }
 }
+
+
 resource "aws_security_group" "service_security_group" {
   ingress {
     from_port       = 0
