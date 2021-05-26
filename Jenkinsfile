@@ -13,7 +13,6 @@ pipeline {
 
         stage('Build infrastructure') {
             steps {
-                sh 'terraform login -auto-approve'
                 sh 'terraform init'
                 sh 'terraform apply -auto-approve'
             }
