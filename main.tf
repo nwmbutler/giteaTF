@@ -2,6 +2,15 @@ provider "aws" {
   region = "eu-west-2"
 }
 
+terraform {
+  backend "remote" {
+    organization = "nick-butler"
+
+    workspaces {
+      name = "gitea"
+    }
+  }
+}
 # Providing a reference to our default VPC
 resource "aws_default_vpc" "default_vpc" {
 }
