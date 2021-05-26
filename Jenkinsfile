@@ -1,6 +1,6 @@
 pipeline {
     agent any
-        
+
     stages {
         stage('Set Terraform path') {
             steps {
@@ -13,7 +13,7 @@ pipeline {
 
         stage('Build infrastructure') {
             steps {
-                sh 'terraform login'
+                sh 'terraform login -auto-approve'
                 sh 'terraform init'
                 sh 'terraform apply -auto-approve'
             }
